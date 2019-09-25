@@ -1,9 +1,11 @@
 
 const path = require('path');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: {
         index: './src/index.js',
         app: './src/app.js',
@@ -52,6 +54,12 @@ module.exports = {
         ]
     },
     plugins:[
-        new VueLoaderPlugin()
-    ]
+        new VueLoaderPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin()
+    ],
+    devServer: {
+        contentBase: './dist',
+        hot: true
+    }
 };
