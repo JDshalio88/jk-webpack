@@ -1,5 +1,5 @@
 // import './css/index.css';
-import './css/index.less';
+import './index.less';
 
 function test() {
 }

@@ -5,14 +5,57 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const glob = require('glob');
+
+const getMpaSet = () => { 
+    const entry = {};
+    const htmlWebpackPlugins = [];
+
+    const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'));
+    /*
+        [ 
+            'D:/code/mycode/webpack/jk-webpack/src/index/index.js',
+            'D:/code/mycode/webpack/jk-webpack/src/vue/index.js' 
+        ]
+    */
+
+    Object.keys(entryFiles)
+        .map((index) => {
+            const entryFile = entryFiles[index];
+
+            const match = entryFile.match(/src\/(.*)\/index.js/);
+            const pagename = match && match[1];
+
+            entry[pagename] = entryFile;
+            htmlWebpackPlugins.push(
+                new HtmlWebpackPlugin({
+                    template: path.join(__dirname, `./src/${pagename}/index.html`),
+                    filename: `${pagename}.html`,
+                    chunks: [pagename],
+                    inject: true,
+                    minify: {
+                        html5: true,
+                        collapseWhitespace: true,
+                        preserveLineBreaks: false,
+                        minifyCSS: true,
+                        minifyJS: true,
+                        removeComments: true
+                    }
+            }))
+        })
+
+    console.log('entry files: ', entryFiles);
+    return {
+        entry,
+        htmlWebpackPlugins
+    }
+}
+
+const { entry, htmlWebpackPlugins } = getMpaSet();
 
 module.exports = {
     mode: 'production',
-    entry: {
-        index: './src/index.js',
-        app: './src/app.js',
-        vue: './src/vue.js'
-    },
+    entry: entry,
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name]_[chunkhash:8].js'
@@ -101,38 +144,10 @@ module.exports = {
             assetNmaeRegExp: /\.css$/g,
             cssProcessor: require('cssnano')
         }),
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'src/index.html'),
-            filename:'index.html',
-            chunks: ['index'],
-            inject: true,
-            // minify: {
-            //     html5: true,
-            //     collapseWhitespace: true,
-            //     preserveLineBreaks: false,
-            //     minifyCSS: true,
-            //     minifyJS: true,
-            //     removeComments: true
-            // }
-        }),
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'src/vue.html'),
-            filename:'vue.html',
-            chunks: ['vue'],
-            inject: true,
-            minify: {
-                html5: true,
-                collapseWhitespace: true,
-                preserveLineBreaks: false,
-                minifyCSS: true,
-                minifyJS: true,
-                removeComments: true
-            }
-        }),
         new CleanWebpackPlugin(),
         new VueLoaderPlugin(),
         //new webpack.HotModuleReplacementPlugin()
-    ],
+    ].concat(htmlWebpackPlugins),
     // devServer: {
     //     contentBase: './dist',
     //     hot: true
