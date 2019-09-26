@@ -38,6 +38,29 @@ module.exports = {
                 ]
             },
             {
+                test: /\.less/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'less-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [
+                                require('autoprefixer')({ overrideBrowserslist: ['iOS >= 7', 'Android >= 4.0'] })
+                            ]
+                        }
+                    },
+                    {
+                        loader: 'px2rem-loader',
+                        options: {
+                            remUnit: 75,
+                            remPrecision: 8
+                        }
+                    }
+                ]
+            },
+            {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: 'babel-loader'
@@ -83,14 +106,14 @@ module.exports = {
             filename:'index.html',
             chunks: ['index'],
             inject: true,
-            minify: {
-                html5: true,
-                collapseWhitespace: true,
-                preserveLineBreaks: false,
-                minifyCSS: true,
-                minifyJS: true,
-                removeComments: true
-            }
+            // minify: {
+            //     html5: true,
+            //     collapseWhitespace: true,
+            //     preserveLineBreaks: false,
+            //     minifyCSS: true,
+            //     minifyJS: true,
+            //     removeComments: true
+            // }
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'src/vue.html'),
