@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 const glob = require('glob');
 
 const getMpaSet = () => { 
@@ -31,16 +32,16 @@ const getMpaSet = () => {
                 new HtmlWebpackPlugin({
                     template: path.join(__dirname, `./src/${pagename}/index.html`),
                     filename: `${pagename}.html`,
-                    chunks: [pagename],
+                    chunks: ['commons', pagename],
                     inject: true,
-                    minify: {
-                        html5: true,
-                        collapseWhitespace: true,
-                        preserveLineBreaks: false,
-                        minifyCSS: true,
-                        minifyJS: true,
-                        removeComments: true
-                    }
+                    // minify: {
+                    //     html5: true,
+                    //     collapseWhitespace: true,
+                    //     preserveLineBreaks: false,
+                    //     minifyCSS: true,
+                    //     minifyJS: true,
+                    //     removeComments: true
+                    // }
             }))
         })
 
@@ -145,11 +146,27 @@ module.exports = {
             cssProcessor: require('cssnano')
         }),
         new CleanWebpackPlugin(),
+        // new HtmlWebpackExternalsPlugin({
+        //     externals: [
+        //         {
+        //             module: 'vue',
+        //             entry: 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
+        //             global: 'Vue',
+        //         }
+        //     ]
+        // }),
         new VueLoaderPlugin(),
         //new webpack.HotModuleReplacementPlugin()
     ].concat(htmlWebpackPlugins),
-    // devServer: {
-    //     contentBase: './dist',
-    //     hot: true
-    // }
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /(vue)/,
+                    name: 'commons',
+                    chunks: 'all'
+                }
+            }
+        }
+    }
 };
