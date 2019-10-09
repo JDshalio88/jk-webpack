@@ -158,15 +158,27 @@ module.exports = {
         new VueLoaderPlugin(),
         //new webpack.HotModuleReplacementPlugin()
     ].concat(htmlWebpackPlugins),
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                commons: {
-                    test: /(vue)/,
-                    name: 'commons',
-                    chunks: 'all'
+    optimization:{
+        splitChunks:{
+            minSize:0,
+            cacheGroups:{
+                commons:{
+                    name: 'commonsfun',
+                    chunks: 'all',
+                    minChunks: 2
                 }
             }
         }
     }
+    // optimization: {
+    //     splitChunks: {
+    //         cacheGroups: {
+    //             commons: {
+    //                 test: /(vue)/,
+    //                 name: 'commons',
+    //                 chunks: 'all'
+    //             }
+    //         }
+    //     }
+    // }
 };
