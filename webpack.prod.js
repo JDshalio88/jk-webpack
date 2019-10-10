@@ -146,15 +146,15 @@ module.exports = {
             cssProcessor: require('cssnano')
         }),
         new CleanWebpackPlugin(),
-        // new HtmlWebpackExternalsPlugin({
-        //     externals: [
-        //         {
-        //             module: 'vue',
-        //             entry: 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
-        //             global: 'Vue',
-        //         }
-        //     ]
-        // }),
+        new HtmlWebpackExternalsPlugin({
+            externals: [
+                {
+                    module: 'vue',
+                    entry: 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
+                    global: 'Vue',
+                }
+            ]
+        }),
         new VueLoaderPlugin(),
         //new webpack.HotModuleReplacementPlugin()
     ].concat(htmlWebpackPlugins),
