@@ -1,0 +1,1 @@
+const WebpackMerge = require('webpack-merge')
