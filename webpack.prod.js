@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 const glob = require('glob');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const getMpaSet = () => { 
     const entry = {};
@@ -156,8 +157,10 @@ module.exports = {
             ]
         }),
         new VueLoaderPlugin(),
+        new FriendlyErrorsWebpackPlugin()
         //new webpack.HotModuleReplacementPlugin()
     ].concat(htmlWebpackPlugins),
+    stats: 'errors-only',
     optimization:{
         splitChunks:{
             minSize:0,
