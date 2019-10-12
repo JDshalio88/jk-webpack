@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const glob = require('glob');
 
+console.log('entry files: ',  __dirname);
+
 const getMpaSet = () => { //多页面打包
     const entry = {};
     const htmlWebpackPlugins = [];

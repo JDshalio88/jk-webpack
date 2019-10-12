@@ -8,6 +8,7 @@
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --watch",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
+    "devtest": "webpack-dev-server --config ./enstezhao-webpack/lib/webpack.dev.js --open",
     "lint": "eslint src/**/*.js --fix"
   },
   "keywords": [],
