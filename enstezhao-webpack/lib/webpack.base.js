@@ -1,17 +1,19 @@
+const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const glob = require('glob');
 
-const getMpaSet = () => { 
+const getMpaSet = () => { //多页面打包
     const entry = {};
     const htmlWebpackPlugins = [];
 
     const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'));
     /*
-        [ 
+        [
             'D:/code/mycode/webpack/jk-webpack/src/index/index.js',
-            'D:/code/mycode/webpack/jk-webpack/src/vue/index.js' 
+            'D:/code/mycode/webpack/jk-webpack/src/vue/index.js'
         ]
     */
 
@@ -23,7 +25,7 @@ const getMpaSet = () => {
             const pagename = match && match[1];
 
             entry[pagename] = entryFile;
-            htmlWebpackPlugins.push(
+            return htmlWebpackPlugins.push(
                 new HtmlWebpackPlugin({
                     template: path.join(__dirname, `./src/${pagename}/index.html`),
                     filename: `${pagename}.html`,
@@ -37,39 +39,25 @@ const getMpaSet = () => {
                         minifyJS: true,
                         removeComments: true
                     }
-            }))
-        })
+                }));
+        });
 
     console.log('entry files: ', entryFiles);
     return {
         entry,
         htmlWebpackPlugins
-    }
-}
+    };
+};
 
 const { entry, htmlWebpackPlugins } = getMpaSet();
 
 module.exports = {
     entry: entry,
     module: {
-        rules:[
-            {
-                test: /\.(js|vue)$/,
-                enforce: 'pre',
-                include: path.resolve(__dirname, 'src'),
-                exclude: /node_modules/,
-                use: [
-                  {
-                    loader: require.resolve('eslint-loader'),
-                    options: {
-                        formatter:require('eslint-friendly-formatter')
-                    }
-                  }
-                ]
-            },
+        rules: [
             {
                 test: /\.css$/,
-                use:[
+                use: [
                     'style-loader',
                     'css-loader'
                 ]
@@ -107,33 +95,43 @@ module.exports = {
                 use: 'vue-loader'
             },
             {
-                test: /\.(png|git|svg|jpg)$/,
-                use: 'file-loader'
-            },
-            {
+                test: /\.(png|git|svg|jpg)$/, //同图片
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name]_[hash:8].[ext]'
+                        }
+                    }
+                ]
+
+            }, {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                use: 'file-loader'
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name]_[hash:8].[ext]'
+                        }
+                    }
+                ]
             }
         ]
     },
-    plugins:[
-        new MiniCssExtractPlugin({
+    plugins: [
+        new MiniCssExtractPlugin({// 提取css为单独的文件
             filename: '[name]_[contentHash:8].css'
-        }), 
-        new OptimizeCssAssetsPlugin({
-            assetNmaeRegExp: /\.css$/g,
-            cssProcessor: require('cssnano')
         }),
-        new CleanWebpackPlugin(),
-        new FriendlyErrorsWebpackPlugin(),
-        function() {
+        new CleanWebpackPlugin(), //目标清理
+        new FriendlyErrorsWebpackPlugin(), //命令行信息展示优化
+        function () { // 错误和捕获处理
             this.hooks.done.tap('done', (stats) => {
-                if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') == -1)
-                {
+                if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') === -1) {
                     console.log('build error');
                     process.exit(1);
                 }
-            })
-        }    
+            });
+        }
     ].concat(htmlWebpackPlugins),
-}
+    stats: 'errors-only'
+};
