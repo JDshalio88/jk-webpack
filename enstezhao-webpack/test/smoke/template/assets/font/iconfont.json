@@ -1,0 +1,16 @@
+{
+  "id": "1427216",
+  "name": "test",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "9214971",
+      "name": "安全_line",
+      "font_class": "anquan",
+      "unicode": "e872",
+      "unicode_decimal": 59506
+    }
+  ]
+}

@@ -1,40 +1,31 @@
 {
-  "name": "enstezhao-webpack",
+  "name": "jike-webpack",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
   "scripts": {
-    "test": "istanbul cover ./node_modules/.bin/_mocha",
-    "eslint": "eslint ./lib --fix"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --watch",
+    "dev": "webpack-dev-server --config webpack.dev.js --open",
+    "devtest": "webpack-dev-server --config ./enstezhao-webpack/lib/webpack.dev.js --open",
+    "lint": "eslint src/**/*.js --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.5.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "assert": "^2.0.0",
-    "chai": "^4.2.0",
-    "glob-all": "^3.1.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^6.1.4",
-    "rimraf": "^2.6.3"
-  },
-  "dependencies": {
-    "webpack-merge": "^4.2.2",
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "autoprefixer": "^9.6.1",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-preset-vue": "^2.0.2",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^13.2.0",
     "eslint-config-alloy": "^3.0.0",
     "eslint-config-ivweb": "^0.1.5",
     "eslint-friendly-formatter": "^4.0.1",
@@ -62,5 +53,11 @@
     "webpack": "^4.31.0",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.1"
+  },
+  "dependencies": {
+    "large-number": "^1.0.1",
+    "lib-flexible": "^0.3.2",
+    "library-test-enstezhao": "^1.0.1",
+    "vue": "^2.6.10"
   }
 }
