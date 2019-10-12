@@ -146,27 +146,39 @@ module.exports = {
             cssProcessor: require('cssnano')
         }),
         new CleanWebpackPlugin(),
-        // new HtmlWebpackExternalsPlugin({
-        //     externals: [
-        //         {
-        //             module: 'vue',
-        //             entry: 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
-        //             global: 'Vue',
-        //         }
-        //     ]
-        // }),
+        new HtmlWebpackExternalsPlugin({
+            externals: [
+                {
+                    module: 'vue',
+                    entry: 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
+                    global: 'Vue',
+                }
+            ]
+        }),
         new VueLoaderPlugin(),
         //new webpack.HotModuleReplacementPlugin()
     ].concat(htmlWebpackPlugins),
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                commons: {
-                    test: /(vue)/,
-                    name: 'commons',
-                    chunks: 'all'
+    optimization:{
+        splitChunks:{
+            minSize:0,
+            cacheGroups:{
+                commons:{
+                    name: 'commonsfun',
+                    chunks: 'all',
+                    minChunks: 2
                 }
             }
         }
     }
+    // optimization: {
+    //     splitChunks: {
+    //         cacheGroups: {
+    //             commons: {
+    //                 test: /(vue)/,
+    //                 name: 'commons',
+    //                 chunks: 'all'
+    //             }
+    //         }
+    //     }
+    // }
 };

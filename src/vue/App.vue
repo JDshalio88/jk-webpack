@@ -1,20 +1,24 @@
 <template>
     <div>
         Hello world
-        <img :src="logo"/>
     </div>
 </template>
 
 <script>
 import logo from './images/logo.png';
+import { sayBye } from './util/index';
 export default {
+    name: 'app',
     data() {
         return {
             logo: logo
-        }
+        };
     },
-    name: "app"
-}
+    created() {
+        console.log(sayBye());
+    }
+};
+
 </script>
 
 <style>

@@ -64,13 +64,16 @@ module.exports = {
     module: {
         rules:[
             {
-                test: /\.js$/,
+                test: /\.(js|vue)$/,
                 enforce: 'pre',
                 include: path.resolve(__dirname, 'src'),
                 exclude: /node_modules/,
                 use: [
                   {
-                    loader: require.resolve('eslint-loader')
+                    loader: require.resolve('eslint-loader'),
+                    options: {
+                        formatter:require('eslint-friendly-formatter')
+                    }
                   }
                 ]
             },
