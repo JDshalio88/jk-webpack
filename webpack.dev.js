@@ -126,7 +126,7 @@ module.exports = {
         ]
     },
     plugins:[
-        new MiniCssExtractPlugin({
+        new MiniCssExtractPlugin({ //css提取成单独的文件
             filename: '[name]_[contentHash:8].css'
         }),
         new OptimizeCssAssetsPlugin({

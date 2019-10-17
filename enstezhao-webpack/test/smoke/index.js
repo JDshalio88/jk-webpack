@@ -11,10 +11,18 @@ process.chdir(path.join(__dirname, 'template'));
 
 rimraf('./dist', () => {
     const prodConfig = require('../../lib/webpack.prod.js');
-
+    //console.log('开始构建', JSON.stringify(prodConfig));
+    // var censor = function(key,value){
+    //     if(typeof(value) == 'function'){
+    //          return Function.prototype.toString.call(value)
+    //     }
+    //     return value;
+    // }
+    //console.log(JSON.stringify(prodConfig,censor,4))
     webpack(prodConfig, (err, stats) => {
+        console.log('Webpack build callback');
         if (err) {
-            console.error(err);
+            console.error('err', err);
             process.exit(2);
         }
         console.log(stats.toString({

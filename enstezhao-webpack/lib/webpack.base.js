@@ -3,15 +3,17 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const glob = require('glob');
+const projectRoot = process.cwd();
 
-console.log('entry files: ',  __dirname);
+console.log('projectRoot', projectRoot)
 
 const getMpaSet = () => { //多页面打包
     const entry = {};
     const htmlWebpackPlugins = [];
 
-    const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'));
+    const entryFiles = glob.sync(path.join(projectRoot, './src/*/index.js'));
     /*
         [
             'D:/code/mycode/webpack/jk-webpack/src/index/index.js',
@@ -19,7 +21,9 @@ const getMpaSet = () => { //多页面打包
         ]
     */
 
-    Object.keys(entryFiles)
+    console.log('entry files:', entryFiles);
+
+    Object.keys(entryFiles) 
         .map((index) => {
             const entryFile = entryFiles[index];
 
@@ -29,7 +33,7 @@ const getMpaSet = () => { //多页面打包
             entry[pagename] = entryFile;
             return htmlWebpackPlugins.push(
                 new HtmlWebpackPlugin({
-                    template: path.join(__dirname, `./src/${pagename}/index.html`),
+                    template: path.join(projectRoot, `./src/${pagename}/index.html`),
                     filename: `${pagename}.html`,
                     chunks: ['commons', pagename],
                     inject: true,
@@ -52,6 +56,8 @@ const getMpaSet = () => { //多页面打包
 };
 
 const { entry, htmlWebpackPlugins } = getMpaSet();
+
+console.log('htmlWebpackPlugins', entry, htmlWebpackPlugins);
 
 module.exports = {
     entry: entry,
@@ -125,15 +131,16 @@ module.exports = {
             filename: '[name]_[contentHash:8].css'
         }),
         new CleanWebpackPlugin(), //目标清理
+        new VueLoaderPlugin(), //vue
         new FriendlyErrorsWebpackPlugin(), //命令行信息展示优化
-        function () { // 错误和捕获处理
-            this.hooks.done.tap('done', (stats) => {
-                if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') === -1) {
-                    console.log('build error');
-                    process.exit(1);
-                }
-            });
-        }
+        // function () { // 错误和捕获处理
+        //     this.hooks.done.tap('done', (stats) => {
+        //         if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') === -1) {
+        //             console.log('build error');
+        //             process.exit(1);
+        //         }
+        //     });
+        // }
     ].concat(htmlWebpackPlugins),
-    stats: 'errors-only'
+    //stats: 'errors-only'
 };
