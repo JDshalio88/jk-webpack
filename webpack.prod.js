@@ -8,6 +8,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 const glob = require('glob');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+ 
+const smp = new SpeedMeasurePlugin();
 
 const getMpaSet = () => { 
     const entry = {};
@@ -55,7 +59,7 @@ const getMpaSet = () => {
 
 const { entry, htmlWebpackPlugins } = getMpaSet();
 
-module.exports = {
+module.exports = smp.wrap({
     mode: 'production',
     entry: entry,
     output: {
@@ -157,7 +161,7 @@ module.exports = {
             ]
         }),
         new VueLoaderPlugin(),
-        new FriendlyErrorsWebpackPlugin(),
+        //new FriendlyErrorsWebpackPlugin(),
         function() {
             this.hooks.done.tap('done', (stats) => {
                 if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') == -1)
@@ -166,10 +170,11 @@ module.exports = {
                     process.exit(1);
                 }
             })
-        }    
+        },
+        new BundleAnalyzerPlugin()    
         //new webpack.HotModuleReplacementPlugin()
     ].concat(htmlWebpackPlugins),
-    stats: 'errors-only',
+    //stats: 'errors-only',
     optimization:{
         splitChunks:{
             minSize:0,
@@ -193,4 +198,4 @@ module.exports = {
     //         }
     //     }
     // }
-};
+});
